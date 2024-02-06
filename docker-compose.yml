@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+    api:
+        build:
+            context: .
+            dockerfile: src/Api/Dockerfile
+        restart: "no"
+        healthcheck:
+          test: wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
+          interval: 25s
+          timeout: 10s
+          retries: 30
+          start_period: 10s
+        ports:
+            - ${API_PORT1:-4000}:8080
+
+    api-tests:
+        build:
+            context: .
+            dockerfile: src/Api/Dockerfile
+            target: test
+        environment:
+            API_ENDPOINT: "http://api:8080"
+        depends_on:
+            api:
+                condition: service_healthy
