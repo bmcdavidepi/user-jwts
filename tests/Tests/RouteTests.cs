@@ -36,7 +36,7 @@ public class RouteTests(AppHostFixture host) : IClassFixture<AppHostFixture>
         var result = await client.SendAsync(httpMessage);
         var contentResult = await result.Content.ReadAsStringAsync();
 
-        Assert.True(result.IsSuccessStatusCode);
+        Assert.Equal(System.Net.HttpStatusCode.OK, result.StatusCode);
         Assert.Equal("Hello world!", contentResult);
     }
 }
